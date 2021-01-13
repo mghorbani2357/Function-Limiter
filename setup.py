@@ -23,6 +23,5 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
-    classifiers=[k for k in open('').read().split('\n') if k],
     description='Rate limiting for callable functions',
 )

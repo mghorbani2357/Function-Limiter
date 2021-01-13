@@ -41,7 +41,7 @@ def get_config():
     cfg = VersioneerConfig()
     cfg.VCS = "git"
     cfg.style = "pep440"
-    cfg.tag_prefix = ""
+    cfg.tag_prefix = "0.0.1"
     cfg.parentdir_prefix = "FunctionLimiter-"
     cfg.versionfile_source = "FunctionLimiter/_version.py"
     cfg.verbose = False
