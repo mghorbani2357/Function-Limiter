@@ -1,0 +1,2 @@
+include versioneer.py
+include FunctionLimiter/_version.py
