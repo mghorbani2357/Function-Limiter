@@ -25,14 +25,21 @@ class Limiter(object):
     def __evaluate_limitations(self, limitations, key):
         """
         Args:
-            limitations (str): Limitations wanted to apply.
-            key (str): Key which specifies the limitation.
+            limitations (str | function): Limitations wanted to apply.
+            key (str | function): Key which specifies the limitation.
 
         Returns:
-            __evaluate_limitations (bool)
-            True if it permitted, False if otherwise
+            bool: True if it permitted, False if otherwise
 
         """
+
+        if callable(limitations):
+            _limitations = limitations # Get Backup of limitations function.
+            limitations = _limitations()
+
+        if callable(key):
+            _key = key  # Get Backup of key function.
+            key = _key()
 
         # Todo: Reconsider on bad key actions.
 
@@ -61,8 +68,8 @@ class Limiter(object):
     def limit(self, limitations='', key=''):
         """
         Args:
-            limitations (str): Limitations wanted to apply.
-            key (str): Key which specifies the limitation.
+            limitations (str | function): Limitations wanted to apply.
+            key (str | function): Key which specifies the limitation.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.

@@ -21,6 +21,7 @@ setup(
     license="MIT",
     zip_safe=False,
     version=versioneer.get_version(),
+    # version='0.0.1',
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
     description='Rate limiting for callable functions',
