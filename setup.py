@@ -18,11 +18,12 @@ setup(
     name='Function Limiter',
     author=__author__,
     author_email=__email__,
+    url="https://github.com/mghorbani2357/Function-Limiter",
     license="MIT",
     zip_safe=False,
     version=versioneer.get_version(),
-    # version='0.0.1',
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
+    long_description=open('README.rst').read() + open('HISTORY.rst').read(),
     description='Rate limiting for callable functions',
 )

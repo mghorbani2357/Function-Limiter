@@ -1,8 +1,9 @@
 .. |license| image:: https://img.shields.io/pypi/l/Function-Limiter.svg?style=flat
-:target: https://pypi.python.org/pypi/Function-Limiter
+    :target: https://pypi.python.org/pypi/Function-Limiter
+
 
 *************
-Flask-Limiter
+Function-Limiter
 *************
 |license|
 
@@ -17,6 +18,7 @@ in memory implementation for storage.
 
 
 .. code-block:: python
+
     from FunctionLimiter.limiter import Limiter
     from FunctionLimiter.limiter import RateLimitExceeded
     import time
