@@ -1,2 +1,5 @@
 include versioneer.py
+include LICENSE.txt
+include HISTORY.rst
+include requirements.txt
 include FunctionLimiter/_version.py
