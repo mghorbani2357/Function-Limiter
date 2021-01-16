@@ -1,6 +1,7 @@
 from functools import wraps
 import time
 import random
+import re
 
 
 class RateLimitExceeded(Exception):
@@ -22,19 +23,40 @@ class Limiter(object):
     def __init__(self):
         self.timer = dict()
 
+    @staticmethod
+    def __validate_limitations(limitations):
+        if type(limitations) == str or type(limitations) == function:
+            if type(limitations) == function:
+                _limitations = limitations  # Get backup of limitations function.
+                limitations = _limitations()
+        else:
+            return False
+
+        regex_string = r'^([0-9+](\.[0-9*])?\/(second|minute|hour|day|week|month|year)\;?)+$'
+
+        regex = re.compile(regex_string)
+
+        if regex.match(limitations):
+            return True
+        else:
+            return False
+
     def __evaluate_limitations(self, limitations, key):
         """
         Args:
-            limitations (str | function): Limitations wanted to apply.
-            key (str | function): Key which specifies the limitation.
+            limitations (str / function): Limitations wanted to apply.
+            key (str / function): Key which specifies the limitation.
 
         Returns:
             bool: True if it permitted, False if otherwise
 
         """
 
+        if not self.__validate_limitations(limitations):
+            return True
+
         if callable(limitations):
-            _limitations = limitations # Get Backup of limitations function.
+            _limitations = limitations  # Get backup of limitations function.
             limitations = _limitations()
 
         if callable(key):
@@ -45,8 +67,6 @@ class Limiter(object):
 
         if key not in self.timer.keys():
             return True
-
-        # Todo: Validate limitation data.
 
         limitations.replace(' per ', '/')
         for limitation in limitations.split(';'):
@@ -68,8 +88,8 @@ class Limiter(object):
     def limit(self, limitations='', key=''):
         """
         Args:
-            limitations (str | function): Limitations wanted to apply.
-            key (str | function): Key which specifies the limitation.
+            limitations (str / function): Limitations wanted to apply.
+            key (str / function): Key which specifies the limitation.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
