@@ -1,0 +1,2 @@
+class NotFunctional(Exception):
+    pass
