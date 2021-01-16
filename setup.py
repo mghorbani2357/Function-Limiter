@@ -24,6 +24,6 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst').read() + open('HISTORY.rst').read(),
     description='Rate limiting for callable functions',
 )
