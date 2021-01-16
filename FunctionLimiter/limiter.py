@@ -25,6 +25,10 @@ class Limiter(object):
 
     @staticmethod
     def __validate_limitations(limitations):
+        """
+        Returns:
+            bool: True if it is valid string, False if it isn't
+        """
         if type(limitations) == str or type(limitations) == function:
             if type(limitations) == function:
                 _limitations = limitations  # Get backup of limitations function.
