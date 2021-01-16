@@ -75,20 +75,30 @@ class Limiter(object):
         if key not in self.timer.keys():
             return True
 
+        passed_log = list()
+
         limitations.replace(' per ', '/')
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
             limit_count = float(limit_count)
             period = time_periods[limit_time]
             lap = 1
+            garbage_set = set()
 
             for tick in self.timer[key]:
                 if time.time() - tick < period:
                     lap += 1
-                    # time_log[key].remove(tick)
+                else:
+                    garbage_set.add(tick)
 
             if limit_count < lap:
                 return False
+            passed_log.append(garbage_set)
+
+        else:
+            to_delete_time_log = list(set.intersection(*passed_log))
+            for item in to_delete_time_log:
+                self.timer.pop(item)
 
         return True
 
