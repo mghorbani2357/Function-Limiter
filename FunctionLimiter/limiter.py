@@ -2,6 +2,8 @@ from functools import wraps
 import time
 import random
 import re
+import redis
+import json
 
 
 class RateLimitExceeded(Exception):
@@ -20,14 +22,32 @@ time_periods = {
 
 
 class Limiter(object):
-    def __init__(self):
-        self.timer = dict()
+    def __init__(self, storage_uri=None):
+        """
+        Args:
+            storage_uri (str): URI of redis.
+
+        """
+
+        #  Todo: Validate storage_uri
+        if storage_uri:
+            self.storage = redis.from_url(url=storage_uri, db=0)
+
+            if not self.storage.exists('logs'):
+                self.logs = self.storage.set('logs', '{}')
+
+            self.logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+
+        else:
+            self.storage_uri = None
+            self.logs = dict()
 
     @staticmethod
     def __validate_limitations(limitations):
         """
         Returns:
             bool: True if it is valid string, False if it isn't
+
         """
         if type(limitations) == str or type(limitations) == function:
             if type(limitations) == function:
@@ -59,8 +79,8 @@ class Limiter(object):
 
         """
 
-        if not self.__validate_limitations(limitations):
-            return True
+        # if not self.__validate_limitations(limitations):
+        #     return True
 
         if callable(limitations):
             _limitations = limitations  # Get backup of limitations function.
@@ -72,10 +92,14 @@ class Limiter(object):
 
         # Todo: Reconsider on bad key actions.
 
-        if key not in self.timer.keys():
+        if key not in self.logs.keys():
             return True
 
         passed_log = list()
+        if self.storage:
+            time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+        else:
+            time_logs = self.logs
 
         limitations.replace(' per ', '/')
         for limitation in limitations.split(';'):
@@ -85,7 +109,7 @@ class Limiter(object):
             lap = 1
             garbage_set = set()
 
-            for tick in self.timer[key]:
+            for tick in time_logs[key]:
                 if time.time() - tick < period:
                     lap += 1
                 else:
@@ -98,7 +122,12 @@ class Limiter(object):
         else:
             to_delete_time_log = list(set.intersection(*passed_log))
             for item in to_delete_time_log:
-                self.timer.pop(item)
+                time_logs[key].remove(item)
+
+        if self.storage:
+            self.storage.set('logs', str(time_logs))
+        else:
+            self.logs = time_logs
 
         return True
 
@@ -113,16 +142,33 @@ class Limiter(object):
 
         Returns:
             limit (function)
+
         """
 
         def decorator(function):
             @wraps(function)
             def wrapper(*args, **kwargs):
-                if key not in self.timer.keys():
-                    self.timer[key] = list()
+
+                if self.storage:
+                    time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+                else:
+                    time_logs = self.logs
+
+                if key not in time_logs:
+                    time_logs[key] = list()
 
                 if self.__evaluate_limitations(limitations, key):
-                    self.timer[key].append(time.time())
+                    if self.storage:
+                        time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+                    else:
+                        time_logs = self.logs
+
+                    time_logs[key].append(time.time())
+
+                    if self.storage:
+                        self.storage.set('logs', str(time_logs))
+                    else:
+                        self.logs = time_logs
                     return function(*args, **kwargs)
                 else:
                     raise RateLimitExceeded
