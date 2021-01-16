@@ -21,6 +21,7 @@ setup(
     url="https://github.com/mghorbani2357/Function-Limiter",
     license="MIT",
     zip_safe=False,
+    packages=find_packages(),
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
