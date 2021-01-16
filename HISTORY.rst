@@ -3,6 +3,16 @@
 Changelog
 =========
 
+v0.0.6
+------
+Release Date: 2021-01-10
+    * Added redis as in memory storage.
+
+v0.0.5
+------
+Release Date: 2021-01-10
+    * Added garbage collector.
+
 v0.0.4
 ------
 Release Date: 2021-01-10
