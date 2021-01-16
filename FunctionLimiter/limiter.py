@@ -32,7 +32,10 @@ class Limiter(object):
         else:
             return False
 
-        regex_string = r'^([0-9+](\.[0-9*])?\/(second|minute|hour|day|week|month|year)\;?)+$'
+        if limitations[-1] != ';':
+            limitations += ';'
+
+        regex_string = r'/^(\d+(\.\d+)?\/(second|minute|hour|week|month|year){1};{1})*$/s'
 
         regex = re.compile(regex_string)
 
