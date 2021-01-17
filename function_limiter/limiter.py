@@ -150,19 +150,14 @@ class Limiter(object):
             @wraps(function)
             def wrapper(*args, **kwargs):
 
-                if self.storage:
-                    time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
-                else:
-                    time_logs = self.logs
-
-                if key not in time_logs:
-                    time_logs[key] = list()
-
                 if self.__evaluate_limitations(limitations, key):
                     if self.storage:
                         time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
                     else:
                         time_logs = self.logs
+
+                    if key not in time_logs:
+                        time_logs[key] = list()
 
                     time_logs[key].append(time.time())
 
