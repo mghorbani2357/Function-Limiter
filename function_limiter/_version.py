@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = ""
     cfg.parentdir_prefix = "Function-Limiter-"
-    cfg.versionfile_source = "function-limiter/_version.py"
+    cfg.versionfile_source = "function_limiter/_version.py"
     cfg.verbose = False
     return cfg
 

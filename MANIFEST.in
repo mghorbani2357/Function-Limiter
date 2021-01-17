@@ -2,4 +2,4 @@ include versioneer.py
 include LICENSE.txt
 include HISTORY.rst
 include requirements.txt
-include function-limiter/_version.py
+include function_limiter/_version.py
