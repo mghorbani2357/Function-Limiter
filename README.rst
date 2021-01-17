@@ -2,9 +2,9 @@
     :target: https://pypi.python.org/pypi/Function-Limiter
 
 
-*************
+*****************
 Function-Limiter
-*************
+*****************
 |license|
 
 
@@ -17,7 +17,7 @@ Add the rate limiter to your function as decorator. The following example uses t
 in memory implementation for storage.
 
 
-.. code-block:: python
+.. code:: python
 
     from FunctionLimiter.limiter import Limiter
     from FunctionLimiter.limiter import RateLimitExceeded

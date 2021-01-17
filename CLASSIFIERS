@@ -1,0 +1,7 @@
+Intended Audience :: Developers
+License :: OSI Approved :: MIT License
+Operating System :: MacOS
+Operating System :: POSIX :: Linux
+Operating System :: OS Independent
+Topic :: Software Development :: Libraries :: Python Modules
+Programming Language :: Python :: Implementation :: PyPy
