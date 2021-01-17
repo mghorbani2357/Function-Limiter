@@ -2,6 +2,10 @@
 
 Changelog
 =========
+v0.0.7
+------
+Release Date: 2021-01-11
+    * Bug Fixed.
 
 v0.0.6
 ------
