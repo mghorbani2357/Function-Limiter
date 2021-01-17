@@ -40,6 +40,7 @@ class Limiter(object):
 
         else:
             self.storage_uri = None
+            self.storage = None
             self.logs = dict()
 
     @staticmethod
