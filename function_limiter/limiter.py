@@ -156,10 +156,12 @@ class Limiter(object):
                     else:
                         time_logs = self.logs
 
-                    if key not in time_logs:
-                        time_logs[key] = list()
+                    _key = key() if callable(key) else key
 
-                    time_logs[key].append(time.time())
+                    if _key not in time_logs:
+                        time_logs[_key] = list()
+
+                    time_logs[_key].append(time.time())
 
                     if self.storage:
                         self.storage.set('logs', str(time_logs))
