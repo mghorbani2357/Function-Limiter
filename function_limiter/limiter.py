@@ -22,6 +22,8 @@ time_periods = {
 
 
 class Limiter(object):
+    __database_name = 'logs'
+    
     def __init__(self, storage_uri=None):
         """
         Args:
@@ -33,10 +35,10 @@ class Limiter(object):
         if storage_uri:
             self.storage = redis.from_url(url=storage_uri, db=0)
 
-            if not self.storage.exists('logs'):
-                self.logs = self.storage.set('logs', '{}')
+            if not self.storage.exists(self.__database_name):
+                self.logs = self.storage.set(self.__database_name, '{}')
 
-            self.logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+            self.logs = json.loads(self.storage.get(self.__database_name).decode().replace('\'', '"'))
 
         else:
             self.storage_uri = None
@@ -80,14 +82,7 @@ class Limiter(object):
         if not self.__validate_limitations(limitations):
             return True
 
-        # if key not in self.logs.keys():
-        #     return True
-
         passed_log = list()
-        if self.storage:
-            time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
-        else:
-            time_logs = self.logs
 
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
@@ -96,7 +91,7 @@ class Limiter(object):
             lap = 0
             garbage_set = set()
 
-            for tick in time_logs[key]:
+            for tick in self.logs[key]:
                 if time.time() - tick < period:
                     lap += 1
                 else:
@@ -105,14 +100,11 @@ class Limiter(object):
             passed_log.append(garbage_set)
 
         else:
-            to_delete_time_log = list(set.intersection(*passed_log))
-            for item in to_delete_time_log:
-                time_logs[key].remove(item)
+            for item in list(set.intersection(*passed_log)):
+                self.logs[key].remove(item)
 
         if self.storage:
-            self.storage.set('logs', str(time_logs))
-        else:
-            self.logs = time_logs
+            self.storage.set(self.__database_name, str(self.logs))
 
         if limit_count < lap:
             return False
@@ -137,26 +129,25 @@ class Limiter(object):
             @wraps(function)
             def wrapper(*args, **kwargs):
                 if self.storage:
-                    time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
-                else:
-                    time_logs = self.logs
+                    self.logs = json.loads(self.storage.get(self.__database_name).decode().replace('\'', '"'))
 
                 _key = key() if callable(key) else key
                 _limitations = limitations() if callable(limitations) else limitations
 
                 if _key is not None:
+
+                    if _key not in self.logs:
+                        self.logs[_key] = list()
+
+                    self.logs[_key].append(time.time())
+
                     if not self.__evaluate_limitations(_limitations, _key):
                         raise RateLimitExceeded
-
-                    if _key not in time_logs:
-                        time_logs[_key] = list()
-
-                    time_logs[_key].append(time.time())
-
-                    if self.storage:
-                        self.storage.set('logs', str(time_logs))
                     else:
-                        self.logs = time_logs
+                        self.logs[_key].pop(-1)
+                    
+                        if self.storage:
+                            self.storage.set(self.__database_name, str(self.logs))
 
                 return function(*args, **kwargs)
 
