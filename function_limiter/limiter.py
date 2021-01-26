@@ -23,7 +23,7 @@ time_periods = {
 
 class Limiter(object):
     __database_name = 'logs'
-    
+
     def __init__(self, storage_uri=None):
         """
         Args:
@@ -79,8 +79,8 @@ class Limiter(object):
         """
 
         limitations.replace(' per ', '/')
-        if not self.__validate_limitations(limitations):
-            return True
+        # if not self.__validate_limitations(limitations):
+        #     return True
 
         passed_log = list()
 
@@ -103,10 +103,7 @@ class Limiter(object):
             for item in list(set.intersection(*passed_log)):
                 self.logs[key].remove(item)
 
-        if self.storage:
-            self.storage.set(self.__database_name, str(self.logs))
-
-        if limit_count < lap:
+        if limit_count - 1 < lap:
             return False
         else:
             return True
@@ -139,15 +136,13 @@ class Limiter(object):
                     if _key not in self.logs:
                         self.logs[_key] = list()
 
-                    self.logs[_key].append(time.time())
-
                     if not self.__evaluate_limitations(_limitations, _key):
                         raise RateLimitExceeded
-                    else:
-                        self.logs[_key].pop(-1)
-                    
-                        if self.storage:
-                            self.storage.set(self.__database_name, str(self.logs))
+
+                    self.logs[_key].append(time.time())
+
+                    if self.storage:
+                        self.storage.set(self.__database_name, str(self.logs))
 
                 return function(*args, **kwargs)
 
