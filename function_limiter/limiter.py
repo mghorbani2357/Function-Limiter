@@ -76,11 +76,12 @@ class Limiter(object):
 
         """
 
+        limitations.replace(' per ', '/')
         if not self.__validate_limitations(limitations):
             return True
 
-        if key not in self.logs.keys():
-            return True
+        # if key not in self.logs.keys():
+        #     return True
 
         passed_log = list()
         if self.storage:
@@ -88,7 +89,6 @@ class Limiter(object):
         else:
             time_logs = self.logs
 
-        limitations.replace(' per ', '/')
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
             limit_count = float(limit_count)
@@ -102,8 +102,6 @@ class Limiter(object):
                 else:
                     garbage_set.add(tick)
 
-            if limit_count < lap:
-                return False
             passed_log.append(garbage_set)
 
         else:
@@ -116,7 +114,10 @@ class Limiter(object):
         else:
             self.logs = time_logs
 
-        return True
+        if limit_count < lap:
+            return False
+        else:
+            return True
 
     def limit(self, limitations='', key=''):
         """
@@ -143,7 +144,7 @@ class Limiter(object):
                 _key = key() if callable(key) else key
                 _limitations = limitations() if callable(limitations) else limitations
 
-                if _key is not None and _limitations is not None:
+                if _key is not None:
                     if _key not in time_logs:
                         time_logs[_key] = list()
 
@@ -154,7 +155,7 @@ class Limiter(object):
                     else:
                         self.logs = time_logs
 
-                    if not self.__evaluate_limitations(limitations, key):
+                    if not self.__evaluate_limitations(_limitations, _key):
                         raise RateLimitExceeded
 
                 return function(*args, **kwargs)
