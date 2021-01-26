@@ -93,7 +93,7 @@ class Limiter(object):
             limit_count, limit_time = limitation.split('/')
             limit_count = float(limit_count)
             period = time_periods[limit_time]
-            lap = 1
+            lap = 0
             garbage_set = set()
 
             for tick in time_logs[key]:
@@ -145,6 +145,9 @@ class Limiter(object):
                 _limitations = limitations() if callable(limitations) else limitations
 
                 if _key is not None:
+                    if not self.__evaluate_limitations(_limitations, _key):
+                        raise RateLimitExceeded
+
                     if _key not in time_logs:
                         time_logs[_key] = list()
 
@@ -154,9 +157,6 @@ class Limiter(object):
                         self.storage.set('logs', str(time_logs))
                     else:
                         self.logs = time_logs
-
-                    if not self.__evaluate_limitations(_limitations, _key):
-                        raise RateLimitExceeded
 
                 return function(*args, **kwargs)
 
