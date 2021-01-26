@@ -149,27 +149,28 @@ class Limiter(object):
         def decorator(function):
             @wraps(function)
             def wrapper(*args, **kwargs):
+                if key is not None and limitations is not None:
+                    if self.__evaluate_limitations(limitations, key):
+                        if self.storage:
+                            time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+                        else:
+                            time_logs = self.logs
 
-                if self.__evaluate_limitations(limitations, key):
-                    if self.storage:
-                        time_logs = json.loads(self.storage.get('logs').decode().replace('\'', '"'))
+                        _key = key() if callable(key) else key
+
+                        if _key not in time_logs:
+                            time_logs[_key] = list()
+
+                        time_logs[_key].append(time.time())
+
+                        if self.storage:
+                            self.storage.set('logs', str(time_logs))
+                        else:
+                            self.logs = time_logs
                     else:
-                        time_logs = self.logs
+                        raise RateLimitExceeded
 
-                    _key = key() if callable(key) else key
-
-                    if _key not in time_logs:
-                        time_logs[_key] = list()
-
-                    time_logs[_key].append(time.time())
-
-                    if self.storage:
-                        self.storage.set('logs', str(time_logs))
-                    else:
-                        self.logs = time_logs
-                    return function(*args, **kwargs)
-                else:
-                    raise RateLimitExceeded
+                return function(*args, **kwargs)
 
             return wrapper
 
