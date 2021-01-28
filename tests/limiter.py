@@ -18,11 +18,8 @@ class TestLimiter(TestCase):
         def func():
             pass
 
-        try:
-            for i in range(3):
-                func()
-        except:
-            self.assertRaises(ModuleNotFoundError)
+        for i in range(3):
+            func()
 
         try:
             func()
@@ -32,18 +29,15 @@ class TestLimiter(TestCase):
     def test_callable_function_limiter(self):
         limiter = Limiter()
 
-        def limitations():
+        def limitations() -> str:
             return '3/minute'
 
         @limiter.limit(limitations, 'key')
         def func():
             pass
 
-        try:
-            for i in range(3):
-                func()
-        except:
-            self.assertRaises(ModuleNotFoundError)
+        for i in range(3):
+            func()
 
         try:
             func()
@@ -53,21 +47,18 @@ class TestLimiter(TestCase):
     def test_multiple_limitations(self):
         limiter = Limiter()
 
-        @limiter.limit('3/minute;1/second', 'key')
+        @limiter.limit('1/second;3/minute', 'key')
         def func():
             pass
 
-        try:
-            for i in range(3):
-                func()
-
-        except Exception as e:
-            self.assertNotEqual(e, RateLimitExceeded)
+        for i in range(3):
+            func()
+            time.sleep(1)
 
         try:
             func()
         except Exception as e:
-            self.assertRaises(ModuleNotFoundError)
+            self.assertNotEqual(e, RateLimitExceeded)
 
     def test_redis_for_single_instance(self):
         storage_uri = 'redis://127.0.0.1:6379/'
