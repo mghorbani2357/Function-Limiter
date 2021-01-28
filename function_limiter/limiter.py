@@ -100,12 +100,12 @@ class Limiter(object):
 
             if limit_count <= lap:
                 return False
-            else:
-                return True
 
         else:
             for item in list(set.intersection(*passed_log)):
                 self.logs[key].remove(item)
+
+        return True
 
     def limit(self, limitations='', key=''):
         """
