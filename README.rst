@@ -56,7 +56,7 @@ There are a few ways of using this decorator depending on your preference and us
 
 
 Single decorator
-****************
+================
 
 The limit string can be a single limit or a delimiter separated string
 
@@ -67,7 +67,7 @@ The limit string can be a single limit or a delimiter separated string
         print('hello world!')
 
 Multiple decorators
-*******************
+===================
 
 The limit string can be a single limit or a delimiter separated string or a combination of both.
 
@@ -80,7 +80,7 @@ The limit string can be a single limit or a delimiter separated string or a comb
 
 
 Custom keying function
-**********************
+======================
 
 By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
 
