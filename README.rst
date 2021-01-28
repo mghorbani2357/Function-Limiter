@@ -54,40 +54,45 @@ The decorators made available as instance methods of the Limiter instance are ``
 
 There are a few ways of using this decorator depending on your preference and use-case.
 
-    Single decorator
 
-        The limit string can be a single limit or a delimiter separated string
+Single decorator
+****************
 
-        .. code-block:: python
+The limit string can be a single limit or a delimiter separated string
 
-            @limiter.limit('3/second;10 per minute', 'key')
-            def function():
-                print('hello world!')
+.. code-block:: python
 
-    Multiple decorators
+    @limiter.limit('3/second;10 per minute', 'key')
+    def function():
+        print('hello world!')
 
-        The limit string can be a single limit or a delimiter separated string or a combination of both.
+Multiple decorators
+*******************
 
-        .. code-block:: python
+The limit string can be a single limit or a delimiter separated string or a combination of both.
 
-            @limiter.limit('3/second', 'key')
-            @limiter.limit('10 per minute', 'key')
-            def function():
-                print('hello world!')
+.. code-block:: python
 
-    Custom keying function
+    @limiter.limit('3/second', 'key')
+    @limiter.limit('10 per minute', 'key')
+    def function():
+        print('hello world!')
 
-        By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
 
-        .. code-block:: python
+Custom keying function
+**********************
 
-            def limitation():
-                return '5/second'
+By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
 
-            def key():
-                return 'custom key'
+.. code-block:: python
 
-            @limiter.limit(limitation, key=key)
-            def function():
-                print('hello world!')
+    def limitation():
+        return '5/second'
+
+    def key():
+        return 'custom key'
+
+    @limiter.limit(limitation, key=key)
+    def function():
+        print('hello world!')
 
