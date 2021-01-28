@@ -3,15 +3,18 @@
 Changelog
 =========
 
-v0.0.8.1
---------
-Release Date: 2021-01-19
-    * Bug Fixed.
+v0.0.9
+------
+Release Date: 2021-01-28
+    * Rate limit policy changed to successful call.
+    * Bug Fixed:
+        * Multiple limit doesn't work.
 
 v0.0.8
 ------
 Release Date: 2021-01-17
-    * Bug Fixed.
+    * Bug Fixed:
+        * Null key bugs Fixed.
 
 v0.0.7
 ------
