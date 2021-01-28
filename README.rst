@@ -15,7 +15,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install Flask-Limiter
+    pip install Function-Limiter
 
 
 Quick Start
