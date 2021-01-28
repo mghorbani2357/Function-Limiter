@@ -66,6 +66,31 @@ class Limiter(object):
         else:
             return False
 
+    def __garbage_collector(self, limitations, key):
+        """
+        Args:
+            limitations (str|function): Limitations wanted to apply.
+            key (str|function): Key which specifies the limitation.
+
+        """
+
+        passed_log = list()
+
+        for limitation in limitations.split(';'):
+            limit_count, limit_time = limitation.split('/')
+            period = time_periods[limit_time]
+            garbage_set = set()
+
+            for tick in self.logs[key]:
+                if time.time() - tick >= period:
+                    garbage_set.add(tick)
+
+            passed_log.append(garbage_set)
+
+        else:
+            for item in list(set.intersection(*passed_log)):
+                self.logs[key].remove(item)
+
     def __evaluate_limitations(self, limitations, key):
         """
         Args:
@@ -77,33 +102,25 @@ class Limiter(object):
 
         """
 
-        limitations.replace(' per ', '/')
         # if not self.__validate_limitations(limitations):
         #     return True
 
-        passed_log = list()
+        self.__garbage_collector(limitations, key)
+
+        limitations.replace(' per ', '/')
 
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
             limit_count = float(limit_count)
             period = time_periods[limit_time]
             lap = 0
-            garbage_set = set()
 
             for tick in self.logs[key]:
                 if time.time() - tick < period:
                     lap += 1
-                else:
-                    garbage_set.add(tick)
-
-            passed_log.append(garbage_set)
 
             if limit_count <= lap:
                 return False
-
-        else:
-            for item in list(set.intersection(*passed_log)):
-                self.logs[key].remove(item)
 
         return True
 
