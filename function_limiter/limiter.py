@@ -1,6 +1,5 @@
 from functools import wraps
 import time
-import random
 import re
 import redis
 import json
@@ -70,8 +69,8 @@ class Limiter(object):
     def __evaluate_limitations(self, limitations, key):
         """
         Args:
-            limitations (str / function): Limitations wanted to apply.
-            key (str / function): Key which specifies the limitation.
+            limitations (str|function): Limitations wanted to apply.
+            key (str|function): Key which specifies the limitation.
 
         Returns:
             bool: True if it permitted, False if otherwise
@@ -99,26 +98,26 @@ class Limiter(object):
 
             passed_log.append(garbage_set)
 
+            if limit_count <= lap:
+                return False
+            else:
+                return True
+
         else:
             for item in list(set.intersection(*passed_log)):
                 self.logs[key].remove(item)
 
-        if limit_count - 1 < lap:
-            return False
-        else:
-            return True
-
     def limit(self, limitations='', key=''):
         """
         Args:
-            limitations (str / function): Limitations wanted to apply.
-            key (str / function): Key which specifies the limitation.
+            limitations (str|function): Limitations wanted to apply.
+            key (str|function): Key which specifies the limitation.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
 
         Returns:
-            limit (function)
+            function: Limited function.
 
         """
 
