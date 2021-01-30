@@ -1,11 +1,21 @@
 .. |license| image:: https://img.shields.io/pypi/l/Function-Limiter.svg?style=flat
     :target: https://pypi.python.org/pypi/Function-Limiter
+    
+.. |build| image:: https://travis-ci.org/mghorbani2357/Function-Limiter.svg?branch=master
+    :target: https://travis-ci.org/mghorbani2357/Function-Limite
+    
+.. |codecov| image:: https://codecov.io/gh/mghorbani2357/Function-Limiter/branch/master/graph/badge.svg?token=V606VBKSGK
+      :target: https://codecov.io/gh/mghorbani2357/Function-Limiter
+    
 
 
 *****************
 Function-Limiter
 *****************
-|license|
+
+.. class:: center
+
+    |license| |build| |codecov|
 
 
 Function-Limiter provides rate limiting features to callable function.
