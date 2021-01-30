@@ -57,7 +57,7 @@ class Limiter(object):
         if limitations[-1] != ';':
             limitations += ';'
 
-        regex_string = r'/^(\d+(\.\d+)?\/(second|minute|hour|week|month|year){1};{1})*$/s'
+        regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(?:second|minute|hour|week|month|year)(?:;|,))'
 
         regex = re.compile(regex_string)
 
@@ -102,12 +102,14 @@ class Limiter(object):
 
         """
 
-        # if not self.__validate_limitations(limitations):
-        #     return True
+        if not self.__validate_limitations(limitations):
+            return True
 
         self.__garbage_collector(limitations, key)
 
         limitations.replace(' per ', '/')
+        limitations.replace(' ', '')
+        limitations.replace(',', ';')
 
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
