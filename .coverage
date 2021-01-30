@@ -1,0 +1,10 @@
+[run]
+omit =
+    /*/function_limiter/_version*
+    /*/tests/*.py
+    versioneer.py
+    setup.py
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
