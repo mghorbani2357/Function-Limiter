@@ -1,8 +1,8 @@
 .. |license| image:: https://img.shields.io/pypi/l/Function-Limiter.svg?style=flat
     :target: https://pypi.python.org/pypi/Function-Limiter
     
-.. |build| image:: https://travis-ci.org/mghorbani2357/Function-Limiter.svg?branch=master
-    :target: https://travis-ci.org/mghorbani2357/Function-Limite
+.. |build| image:: https://travis-ci.com/mghorbani2357/Function-Limiter.svg?branch=master
+    :target: https://travis-ci.com/mghorbani2357/Function-Limiter
     
 .. |codecov| image:: https://codecov.io/gh/mghorbani2357/Function-Limiter/branch/master/graph/badge.svg?token=V606VBKSGK
       :target: https://codecov.io/gh/mghorbani2357/Function-Limiter
