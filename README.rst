@@ -106,3 +106,8 @@ By default rate limits are applied based on the key function that the Limiter in
     def function():
         print('hello world!')
 
+
+
+.. image:: https://api.codacy.com/project/badge/Grade/4ec8eeac03144927aef804e2388b7988
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/mghorbani2357/Function-Limiter?utm_source=github.com&utm_medium=referral&utm_content=mghorbani2357/Function-Limiter&utm_campaign=Badge_Grade
