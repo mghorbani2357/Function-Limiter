@@ -13,7 +13,7 @@
 .. |coverage| image:: https://app.codacy.com/project/badge/Coverage/ebc9c5345a4f48bda082b09b815cee57   
     :target: https://www.codacy.com/gh/mghorbani2357/Function-Limiter/dashboard?utm_source=github.com&utm_medium=referral&utm_content=mghorbani2357/Function-Limiter&utm_campaign=Badge_Coverage
 
-.. |downloadrate| image:: https://img.shields.io/pypi/dm/Function-Limiter   :alt: PyPI - Downloads
+.. |downloadrate| image:: https://img.shields.io/pypi/dm/Function-Limiter
     :target: https://pypistats.org/packages/function-limiter
 
 
