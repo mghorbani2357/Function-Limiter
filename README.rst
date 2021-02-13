@@ -14,7 +14,6 @@
     :target: https://www.codacy.com/gh/mghorbani2357/Function-Limiter/dashboard?utm_source=github.com&utm_medium=referral&utm_content=mghorbani2357/Function-Limiter&utm_campaign=Badge_Coverage
 
 .. |downloadrate| image:: https://img.shields.io/pypi/dm/Function-Limiter   :alt: PyPI - Downloads
-    :target: https://pypistats.org/packages/function-limiter
 
 
 *****************
