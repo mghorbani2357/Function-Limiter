@@ -9,7 +9,9 @@
 
 ..  |quality| image:: https://api.codacy.com/project/badge/Grade/4ec8eeac03144927aef804e2388b7988
    :target: https://app.codacy.com/gh/mghorbani2357/Function-Limiter?utm_source=github.com&utm_medium=referral&utm_content=mghorbani2357/Function-Limiter&utm_campaign=Badge_Grade
-    
+   
+.. |coverage| image:: https://app.codacy.com/project/badge/Coverage/ebc9c5345a4f48bda082b09b815cee57   
+:target: https://www.codacy.com/gh/mghorbani2357/Function-Limiter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mghorbani2357/Function-Limiter&amp;utm_campaign=Badge_Coverage
 
 
 *****************
@@ -18,7 +20,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality|
+    |license| |build| |quality| |coverage|
 
 
 Function-Limiter provides rate limiting features to callable function.
