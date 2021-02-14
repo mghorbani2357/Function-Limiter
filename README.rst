@@ -19,6 +19,14 @@
 .. |wheel| image:: https://img.shields.io/pypi/wheel/Function-Limiter  
     :target: https://pypi.python.org/pypi/Function-Limiter
     :alt: PyPI - Wheel
+    
+.. |pypiversion| image:: https://img.shields.io/pypi/v/Function-Limiter  
+    :target: https://pypi.python.org/pypi/Function-Limiter
+    :alt: PyPI
+    
+.. |format| image:: https://img.shields.io/pypi/format/Function-Limiter
+    :target: https://pypi.python.org/pypi/Function-Limiter
+    :alt: PyPI - Format
 
 
 *****************
@@ -27,7 +35,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate| |wheel|
+    |license| |build| |quality| |codecov| |downloadrate| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
