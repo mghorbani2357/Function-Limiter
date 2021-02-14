@@ -127,11 +127,11 @@ class Limiter(object):
 
         return True
 
-    def limit(self, limitations='', key=''):
+    def limit(self, limitations=None, key=None):
         """
         Args:
-            limitations (str|function): Limitations wanted to apply.
-            key (str|function): Key which specifies the limitation.
+            limitations (str|function|NoneType): Limitations wanted to apply.
+            key (str|function|NoneType): Key which specifies the limitation.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
