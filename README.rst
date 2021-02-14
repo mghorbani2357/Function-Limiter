@@ -35,7 +35,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |codecov| |downloadrate| |pypiversion| |format| |wheel|
+    |license| |build| |quality| |coverage| |downloadrate| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
