@@ -27,6 +27,9 @@
 .. |format| image:: https://img.shields.io/pypi/format/Function-Limiter
     :target: https://pypi.python.org/pypi/Function-Limiter
     :alt: PyPI - Format
+    
+.. |downloads| image:: https://static.pepy.tech/personalized-badge/function-limiter?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads
+     :target: https://pepy.tech/project/function-limiter
 
 
 *****************
@@ -35,7 +38,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate| |pypiversion| |format| |wheel|
+    |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
