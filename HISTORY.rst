@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v0.0.10
+------
+Release Date: 2021-02-14
+    * Global limitations added.
+
 v0.0.9
 ------
 Release Date: 2021-01-28
