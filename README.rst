@@ -27,7 +27,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate|
+    |license| |build| |quality| |coverage| |downloadrate| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
