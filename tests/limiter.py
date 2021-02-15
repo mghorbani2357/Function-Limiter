@@ -1,9 +1,7 @@
-import unittest
 from unittest import TestCase
 from function_limiter.limiter import Limiter
 from function_limiter.limiter import RateLimitExceeded
 import time
-from tests.exceptions import NotFunctional
 from multiprocessing import Process
 
 

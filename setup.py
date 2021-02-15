@@ -1,7 +1,4 @@
-"""
-setup.py for function_limiter
-
-"""
+"""setup.py for function_limiter"""
 
 __author__ = "Mohsen Ghorbani"
 __email__ = "m.ghorbani2357@gmail.com"

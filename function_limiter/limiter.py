@@ -57,7 +57,7 @@ class Limiter(object):
             bool: True if it is valid string, False if it isn't
 
         """
-        if type(limitations) is not str:
+        if isinstance(limitations,str):
             return False
 
         if limitations[-1] != ';':
@@ -93,9 +93,8 @@ class Limiter(object):
 
             passed_log.append(garbage_set)
 
-        else:
-            for item in list(set.intersection(*passed_log)):
-                self.logs[key].remove(item)
+        for item in list(set.intersection(*passed_log)):
+            self.logs[key].remove(item)
 
     def __evaluate_limitations(self, limitations, key):
         """

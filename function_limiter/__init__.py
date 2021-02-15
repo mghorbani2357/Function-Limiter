@@ -1,7 +1,4 @@
-"""
-    Function-Limiter Extension for limiting callable functions.
-
-"""
+"""Function-Limiter Extension for limiting callable functions."""
 
 __author__ = 'm.ghorbani2357@gmail.com'
 
