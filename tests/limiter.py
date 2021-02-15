@@ -63,7 +63,24 @@ class TestLimiter(TestCase):
             global_limitations='3/minute'
         )
 
-        @limiter.limit('None', 'key')
+        @limiter.limit(None, 'key')
+        def func():
+            pass
+
+        for i in range(3):
+            func()
+
+        try:
+            func()
+        except Exception as e:
+            self.assertNotEqual(e, RateLimitExceeded)
+
+    def test_global_limitations_key(self):
+        limiter = Limiter(
+            global_key='key'
+        )
+
+        @limiter.limit('3/minute')
         def func():
             pass
 
