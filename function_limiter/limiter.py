@@ -23,11 +23,15 @@ time_periods = {
 class Limiter(object):
     __database_name = 'logs'
 
-    def __init__(self, storage_uri=None, global_limitations=None):
+    def __init__(self, storage_uri=None, global_limitations=None,global_key=None):
         """
         Args:
             storage_uri (str): URI of redis.
             global_limitations (str): Global limitations
+            global_key (str): Global limitations key
+
+        Todo:
+            * Define exempt key
 
         """
 
@@ -43,6 +47,7 @@ class Limiter(object):
             self.storage_uri = None
             self.storage = None
             self.global_limitations = global_limitations
+            self.global_key = global_key
             self.logs = dict()
 
     @staticmethod
@@ -152,6 +157,9 @@ class Limiter(object):
 
                 if not _limitations and self.global_limitations:
                     _limitations = self.global_limitations
+
+                if not _key and self.global_key:
+                    _key = self.global_key
 
                 if _key is not None:
 
