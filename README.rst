@@ -14,7 +14,22 @@
     :target: https://www.codacy.com/gh/mghorbani2357/Function-Limiter/dashboard?utm_source=github.com&utm_medium=referral&utm_content=mghorbani2357/Function-Limiter&utm_campaign=Badge_Coverage
 
 .. |downloadrate| image:: https://img.shields.io/pypi/dm/Function-Limiter
-    :target: https://pypistats.org/packages/function-lim<iter
+    :target: https://pypistats.org/packages/function-limiter
+    
+.. |wheel| image:: https://img.shields.io/pypi/wheel/Function-Limiter  
+    :target: https://pypi.python.org/pypi/Function-Limiter
+    :alt: PyPI - Wheel
+    
+.. |pypiversion| image:: https://img.shields.io/pypi/v/Function-Limiter  
+    :target: https://pypi.python.org/pypi/Function-Limiter
+    :alt: PyPI
+    
+.. |format| image:: https://img.shields.io/pypi/format/Function-Limiter
+    :target: https://pypi.python.org/pypi/Function-Limiter
+    :alt: PyPI - Format
+    
+.. |downloads| image:: https://static.pepy.tech/personalized-badge/function-limiter?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads
+    :target: https://pepy.tech/project/function-limiter
 
 
 *****************
@@ -23,7 +38,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate|
+    |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
