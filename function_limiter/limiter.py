@@ -23,16 +23,16 @@ time_periods = {
 class Limiter(object):
     __database_name = 'logs'
 
-    def __init__(self, storage_uri=None, global_limitations=None,global_key=None):
+    def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None):
         """
         Args:
             storage_uri (str): URI of redis.
-            global_limitations (str): Global limitations
-            global_key (str): Global limitations key
+            default_limitations (str|function|None): Global limitations
+            default_key (str|function|None): Global limitations key
+            default_exempt (str|function|None): Exempt key used to decide if the rate limit should skipped.
 
         Todo:
-            * Define exempt key
-
+            * Add exempt testcases
         """
 
         if storage_uri:
@@ -46,8 +46,9 @@ class Limiter(object):
         else:
             self.storage_uri = None
             self.storage = None
-            self.global_limitations = global_limitations
-            self.global_key = global_key
+            self.default_limitations = default_limitations
+            self.default_key = default_key
+            self.default_exempt = default_exempt
             self.logs = dict()
 
     @staticmethod
@@ -57,7 +58,7 @@ class Limiter(object):
             bool: True if it is valid string, False if it isn't
 
         """
-        if isinstance(limitations,str):
+        if isinstance(limitations, str):
             return False
 
         if limitations[-1] != ';':
@@ -131,11 +132,12 @@ class Limiter(object):
 
         return True
 
-    def limit(self, limitations=None, key=None):
+    def limit(self, limitations=None, key=None, exempt=None):
         """
         Args:
             limitations (str|function|NoneType): Limitations wanted to apply.
             key (str|function|NoneType): Key which specifies the limitation.
+            exempt (str|function|Non~e): Exempt key used to decide if the rate limit should skipped.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
@@ -153,14 +155,18 @@ class Limiter(object):
 
                 _key = key() if callable(key) else key
                 _limitations = limitations() if callable(limitations) else limitations
+                _exempt = exempt() if callable(exempt) else exempt
 
-                if not _limitations and self.global_limitations:
-                    _limitations = self.global_limitations
+                if not _limitations and self.default_limitations:
+                    _limitations = self.default_limitations
 
-                if not _key and self.global_key:
-                    _key = self.global_key
+                if not _key and self.default_key:
+                    _key = self.default_key
 
-                if _key is not None:
+                if not exempt and self.default_exempt:
+                    _exempt = self.default_exempt
+
+                if not (_key is None or _key == _exempt):
 
                     if _key not in self.logs:
                         self.logs[_key] = list()

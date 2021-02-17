@@ -5,7 +5,7 @@ Changelog
 
 v0.0.11
 -------
-Release Date: 2021-02-14
+Release Date: 2021-02-15
     * Global limitations key added.
 
 v0.0.10

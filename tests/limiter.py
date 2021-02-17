@@ -60,7 +60,7 @@ class TestLimiter(TestCase):
 
     def test_global_limitations(self):
         limiter = Limiter(
-            global_limitations='3/minute'
+            default_limitations='3/minute'
         )
 
         @limiter.limit(None, 'key')
@@ -77,7 +77,7 @@ class TestLimiter(TestCase):
 
     def test_global_limitations_key(self):
         limiter = Limiter(
-            global_key='key'
+            default_key='key'
         )
 
         @limiter.limit('3/minute')
