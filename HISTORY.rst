@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v0.0.12
+-------
+Release Date: 2021-02-18
+    * Exempt key added.
+
 v0.0.11
 -------
 Release Date: 2021-02-15

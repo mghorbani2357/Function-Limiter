@@ -137,7 +137,7 @@ class Limiter(object):
         Args:
             limitations (str|function|NoneType): Limitations wanted to apply.
             key (str|function|NoneType): Key which specifies the limitation.
-            exempt (str|function|Non~e): Exempt key used to decide if the rate limit should skipped.
+            exempt (str|function|None): Exempt key used to decide if the rate limit should skipped.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
