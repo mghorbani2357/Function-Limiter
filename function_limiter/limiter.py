@@ -24,6 +24,7 @@ class Limiter(object):
     __database_name = 'logs'
 
     def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None):
+
         """
         Args:
             storage_uri (str): URI of redis.
@@ -53,6 +54,7 @@ class Limiter(object):
 
     @staticmethod
     def __validate_limitations(limitations):
+
         """
         Returns:
             bool: True if it is valid string, False if it isn't
@@ -74,6 +76,7 @@ class Limiter(object):
             return False
 
     def __garbage_collector(self, limitations, key):
+
         """
         Args:
             limitations (str|function): Limitations wanted to apply.
@@ -84,7 +87,8 @@ class Limiter(object):
         passed_log = list()
 
         for limitation in limitations.split(';'):
-            limit_count, limit_time = limitation.split('/')
+            # limit_count, limit_time = limitation.split('/')
+            limit_time = limitation.split('/')[1]
             period = time_periods[limit_time]
             garbage_set = set()
 
@@ -98,6 +102,7 @@ class Limiter(object):
             self.logs[key].remove(item)
 
     def __evaluate_limitations(self, limitations, key):
+
         """
         Args:
             limitations (str|function): Limitations wanted to apply.
@@ -133,6 +138,7 @@ class Limiter(object):
         return True
 
     def limit(self, limitations=None, key=None, exempt=None):
+
         """
         Args:
             limitations (str|function|NoneType): Limitations wanted to apply.
