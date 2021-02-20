@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v0.1.1
+-------
+Release Date: 2021-02-21
+    * Bug Fixed:
+        * Multiple line decorator doesn't work
 
 v0.1.0
 -------

@@ -24,7 +24,7 @@ time_periods = {
 
 class Limiter(object):
     __database_name = 'function-limiter'
-    __decorator_count = 0
+    __limiter_keys = list()
 
     def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None,
                  database_name=None):
@@ -34,9 +34,6 @@ class Limiter(object):
             default_limitations (str|function|None): Global limitations
             default_key (str|function|None): Global limitations key
             default_exempt (str|function|None): Exempt key used to decide if the rate limit should skipped.
-
-        Todo:
-            * Add exempt testcases
 
         """
         if database_name is not None:
@@ -152,12 +149,7 @@ class Limiter(object):
         Returns:
             function: Limited function.
 
-        Todo:
-            * multiple line decorator doesn't work (Bug)
-
-
         """
-
         def decorator(function):
             @wraps(function)
             def wrapper(*args, **kwargs):
@@ -178,19 +170,24 @@ class Limiter(object):
                     _exempt = self.default_exempt
 
                 if not (_key is None or _key == _exempt):
+                    self.__limiter_keys.append(_key)
+                    if self.__limiter_keys.count(_key) < 1:
 
-                    if _key not in self.logs:
-                        self.logs[_key] = list()
+                        if _key not in self.logs:
+                            self.logs[_key] = list()
 
-                    if not self.__evaluate_limitations(_limitations, _key):
-                        raise RateLimitExceeded
+                        if not self.__evaluate_limitations(_limitations, _key):
+                            raise RateLimitExceeded
 
-                    self.logs[_key].append(time.time())
+                        self.logs[_key].append(time.time())
 
-                    if self.storage:
-                        self.storage.set(self.__database_name, str(self.logs))
+                        if self.storage:
+                            self.storage.set(self.__database_name, str(self.logs))
 
                 return function(*args, **kwargs)
+
+            if self.__limiter_keys.__len__() > 0:
+                self.__limiter_keys.pop(0)
 
             return wrapper
 
