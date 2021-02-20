@@ -23,7 +23,8 @@ time_periods = {
 class Limiter(object):
     __database_name = 'function-limiter'
 
-    def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None):
+    def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None,
+                 database_name=None):
         """
         Args:
             storage_uri (str): URI of redis.
@@ -35,6 +36,9 @@ class Limiter(object):
             * Add exempt testcases
 
         """
+        if database_name is not None:
+            self.__database_name = database_name
+
         if storage_uri:
             self.storage = redis.from_url(url=storage_uri, db=0)
 
@@ -137,13 +141,17 @@ class Limiter(object):
         Args:
             limitations (str|function|NoneType): Limitations wanted to apply.
             key (str|function|NoneType): Key which specifies the limitation.
-            exempt (str|function|None): Exempt key used to decide if the rate limit should skipped.
+            exempt (str|function|NoneType): Exempt key used to decide if the rate limit should skipped.
 
         Raises:
             RateLimitExceeded (RateLimitExceeded): When callable function reached the limitations.
 
         Returns:
             function: Limited function.
+
+        Todo:
+            * multiple line decorator doesn't work (Bug)
+
 
         """
 
