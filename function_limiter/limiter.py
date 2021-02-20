@@ -21,10 +21,9 @@ time_periods = {
 
 
 class Limiter(object):
-    __database_name = 'logs'
+    __database_name = 'function-limiter'
 
     def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None):
-
         """
         Args:
             storage_uri (str): URI of redis.
@@ -34,8 +33,8 @@ class Limiter(object):
 
         Todo:
             * Add exempt testcases
-        """
 
+        """
         if storage_uri:
             self.storage = redis.from_url(url=storage_uri, db=0)
 
@@ -45,45 +44,43 @@ class Limiter(object):
             self.logs = json.loads(self.storage.get(self.__database_name).decode().replace('\'', '"'))
 
         else:
-            self.storage_uri = None
             self.storage = None
-            self.default_limitations = default_limitations
-            self.default_key = default_key
-            self.default_exempt = default_exempt
             self.logs = dict()
+
+        self.default_limitations = default_limitations
+        self.default_key = default_key
+        self.default_exempt = default_exempt
 
     @staticmethod
     def __validate_limitations(limitations):
-
         """
         Returns:
             bool: True if it is valid string, False if it isn't
 
         """
-        if isinstance(limitations, str):
+        if not isinstance(limitations, str):
             return False
 
-        if limitations[-1] != ';':
-            limitations += ';'
+        if limitations[-1] != ';':  # If limitations doesn't end with `;`
+            limitations += ';'  # Add `;` to end of the string
 
+        # Check limitation must fallow `count per period;`
         regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(?:second|minute|hour|week|month|year)(?:;|,))'
 
         regex = re.compile(regex_string)
 
-        if regex.match(limitations):
+        if regex.match(limitations):  # If matches return true to continue the rule
             return True
-        else:
+        else:  # otherwise return False to allow to execute the function
             return False
 
     def __garbage_collector(self, limitations, key):
-
         """
         Args:
             limitations (str|function): Limitations wanted to apply.
             key (str|function): Key which specifies the limitation.
 
         """
-
         passed_log = list()
 
         for limitation in limitations.split(';'):
@@ -102,7 +99,6 @@ class Limiter(object):
             self.logs[key].remove(item)
 
     def __evaluate_limitations(self, limitations, key):
-
         """
         Args:
             limitations (str|function): Limitations wanted to apply.
@@ -112,15 +108,14 @@ class Limiter(object):
             bool: True if it permitted, False if otherwise
 
         """
-
         if not self.__validate_limitations(limitations):
             return True
 
-        self.__garbage_collector(limitations, key)
+        limitations = limitations.replace('per', '/')
+        limitations = limitations.replace(' ', '')
+        limitations = limitations.replace(',', ';')
 
-        limitations.replace(' per ', '/')
-        limitations.replace(' ', '')
-        limitations.replace(',', ';')
+        self.__garbage_collector(limitations, key)
 
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
@@ -138,7 +133,6 @@ class Limiter(object):
         return True
 
     def limit(self, limitations=None, key=None, exempt=None):
-
         """
         Args:
             limitations (str|function|NoneType): Limitations wanted to apply.
@@ -163,13 +157,13 @@ class Limiter(object):
                 _limitations = limitations() if callable(limitations) else limitations
                 _exempt = exempt() if callable(exempt) else exempt
 
-                if not _limitations and self.default_limitations:
+                if _limitations is None and self.default_limitations:
                     _limitations = self.default_limitations
 
-                if not _key and self.default_key:
+                if _key is None and self.default_key:
                     _key = self.default_key
 
-                if not exempt and self.default_exempt:
+                if exempt is None and self.default_exempt:
                     _exempt = self.default_exempt
 
                 if not (_key is None or _key == _exempt):
