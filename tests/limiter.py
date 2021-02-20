@@ -92,6 +92,23 @@ class TestLimiter(TestCase):
         except Exception as e:
             self.assertNotEqual(e, RateLimitExceeded)
 
+    def test_exempt_key(self):
+        limiter = Limiter(
+            default_key='key'
+        )
+
+        @limiter.limit('3/minute', 'key', exempt='key')
+        def func():
+            pass
+
+        for i in range(10):
+            func()
+
+        try:
+            func()
+        except Exception as e:
+            self.assertEqual(e, RateLimitExceeded)
+
     # def test_redis_for_single_instance(self):
     #     storage_uri = 'redis://127.0.0.1:6379/'
     #     limiter = Limiter(storage_uri=storage_uri)
