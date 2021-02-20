@@ -1,3 +1,5 @@
+"""Function-Limiter Extension for limiting callable functions."""
+
 from functools import wraps
 import time
 import re
@@ -22,6 +24,7 @@ time_periods = {
 
 class Limiter(object):
     __database_name = 'function-limiter'
+    __decorator_count = 0
 
     def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None,
                  database_name=None):

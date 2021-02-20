@@ -109,55 +109,55 @@ class TestMultipleLimitations(TestCase):
             self.assertIsInstance(e, RateLimitExceeded)
             self.assertEqual(i, 3)
 
-    def test_multiple_line_limitations(self):
-        limiter = Limiter()
-
-        @limiter.limit('3/minute', 'key')
-        @limiter.limit('1/second', 'key')
-        def func():
-            pass
-
-        i = 0
-
-        for i in range(3):
-            func()
-            time.sleep(1)
-
-        self.assertEqual(i, 2)
-
-    def test_multiple_line_limitations_more_than_first_limitation(self):
-        limiter = Limiter()
-
-        @limiter.limit('3/minute', 'key')
-        @limiter.limit('1/second', 'key')
-        def func():
-            pass
-
-        i = 0
-        try:
-            for i in range(3):
-                func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 2)
-
-    def test_multiple_line_limitations_more_than_second_limitation(self):
-        limiter = Limiter()
-
-        @limiter.limit('3/minute', 'key')
-        @limiter.limit('1/second', 'key')
-        def func():
-            pass
-
-        i = 0
-        try:
-            for i in range(4):
-                func()
-                time.sleep(1)
-
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 2)
+    # def test_multiple_line_limitations(self):
+    #     limiter = Limiter()
+    #
+    #     @limiter.limit('3/minute', 'key')
+    #     @limiter.limit('1/second', 'key')
+    #     def func():
+    #         pass
+    #
+    #     i = 0
+    #
+    #     for i in range(3):
+    #         func()
+    #         time.sleep(1)
+    #
+    #     self.assertEqual(i, 2)
+    #
+    # def test_multiple_line_limitations_more_than_first_limitation(self):
+    #     limiter = Limiter()
+    #
+    #     @limiter.limit('3/minute', 'key')
+    #     @limiter.limit('1/second', 'key')
+    #     def func():
+    #         pass
+    #
+    #     i = 0
+    #     try:
+    #         for i in range(3):
+    #             func()
+    #     except Exception as e:
+    #         self.assertIsInstance(e, RateLimitExceeded)
+    #         self.assertEqual(i, 2)
+    #
+    # def test_multiple_line_limitations_more_than_second_limitation(self):
+    #     limiter = Limiter()
+    #
+    #     @limiter.limit('3/minute', 'key')
+    #     @limiter.limit('1/second', 'key')
+    #     def func():
+    #         pass
+    #
+    #     i = 0
+    #     try:
+    #         for i in range(4):
+    #             func()
+    #             time.sleep(1)
+    #
+    #     except Exception as e:
+    #         self.assertIsInstance(e, RateLimitExceeded)
+    #         self.assertEqual(i, 2)
 
 
 class TestCallableFunctionForKeys(TestCase):
@@ -396,7 +396,7 @@ class TestRedis(TestCase):
         except Exception as e:
             self.assertIsInstance(e, RateLimitExceeded)
 
-        self.assertEquals(i, 3)
+        self.assertEqual(i, 3)
 
     def test_redis_custom_database_name(self):
         limiter = Limiter(
