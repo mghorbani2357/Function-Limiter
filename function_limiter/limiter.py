@@ -170,24 +170,24 @@ class Limiter(object):
                     _exempt = self.default_exempt
 
                 if not (_key is None or _key == _exempt):
-                    self.__limiter_keys.append(_key)
-                    if self.__limiter_keys.count(_key) < 1:
+                    # self.__limiter_keys.append(_key)
+                    # if self.__limiter_keys.count(_key) <= 1:
 
-                        if _key not in self.logs:
-                            self.logs[_key] = list()
+                    if _key not in self.logs:
+                        self.logs[_key] = list()
 
-                        if not self.__evaluate_limitations(_limitations, _key):
-                            raise RateLimitExceeded
+                    if not self.__evaluate_limitations(_limitations, _key):
+                        raise RateLimitExceeded
 
-                        self.logs[_key].append(time.time())
+                    self.logs[_key].append(time.time())
 
-                        if self.storage:
-                            self.storage.set(self.__database_name, str(self.logs))
+                    if self.storage:
+                        self.storage.set(self.__database_name, str(self.logs))
 
                 return function(*args, **kwargs)
 
-            if self.__limiter_keys.__len__() > 0:
-                self.__limiter_keys.pop(0)
+            # if self.__limiter_keys.__len__() > 0:
+            #     self.__limiter_keys.pop(0)
 
             return wrapper
 
