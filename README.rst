@@ -38,7 +38,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
+
 
 
 Function-Limiter provides rate limiting features to callable function.
@@ -99,18 +99,6 @@ The limit string can be a single limit or a delimiter separated string
     def function():
         print('hello world!')
 
-Multiple decorators
-===================
-
-The limit string can be a single limit or a delimiter separated string or a combination of both.
-
-.. code-block:: python
-
-    @limiter.limit('3/second', 'key')
-    @limiter.limit('10 per minute', 'key')
-    def function():
-        print('hello world!')
-
 
 Custom keying function
 ======================
@@ -129,3 +117,33 @@ By default rate limits are applied based on the key function that the Limiter in
     def function():
         print('hello world!')
 
+
+
+Redis storage
+======================
+
+By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
+
+.. code-block:: python
+
+    limiter = Limiter(
+        storage_uri='redis://ip:port/'
+    )
+
+    @limiter.limit('3/minute', 'key')
+    def func():
+        pass
+
+
+Exempt key
+======================
+
+By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
+
+.. code-block:: python
+
+    limiter = Limiter()
+
+    @limiter.limit('3/minute', 'key', exempt='key')
+    def func():
+        pass
