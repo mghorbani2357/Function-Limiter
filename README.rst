@@ -30,6 +30,10 @@
     
 .. |downloads| image:: https://static.pepy.tech/personalized-badge/function-limiter?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads
     :target: https://pepy.tech/project/function-limiter
+    
+.. |readthedocs| image:: https://readthedocs.org/projects/function-limiter/badge/?version=latest
+    :target: https://function-limiter.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 
 *****************
@@ -38,7 +42,7 @@ Function-Limiter
 
 .. class:: center
 
-    |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
+  |readthedocs|  |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides rate limiting features to callable function.
