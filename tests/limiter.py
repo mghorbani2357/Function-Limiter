@@ -17,13 +17,10 @@ class TestSimpleFiveRequest(TestCase):
             pass
 
         i = 0
+        for i in range(5):
+            func()
 
-        try:
-            for i in range(5):
-                func()
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 4)
+        self.assertEqual(i, 4)
 
     def test_more_than_limitation_call(self):
         limiter = Limiter()
@@ -34,12 +31,11 @@ class TestSimpleFiveRequest(TestCase):
 
         i = 0
 
-        try:
+        with self.assertRaises(RateLimitExceeded):
             for i in range(6):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 5)
+
+        self.assertEqual(i, 5)
 
     def test_five_call_using_per(self):
         limiter = Limiter()
@@ -50,12 +46,10 @@ class TestSimpleFiveRequest(TestCase):
 
         i = 0
 
-        try:
-            for i in range(5):
-                func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 4)
+        for i in range(5):
+            func()
+
+        self.assertEqual(i, 4)
 
 
 class TestMultipleLimitations(TestCase):
@@ -84,12 +78,11 @@ class TestMultipleLimitations(TestCase):
 
         i = 0
 
-        try:
+        with self.assertRaises(RateLimitExceeded):
             for i in range(3):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 1)
+
+        self.assertEqual(i, 1)
 
     def test_single_line_limitations_more_than_second_limitation(self):
         limiter = Limiter()
@@ -100,14 +93,12 @@ class TestMultipleLimitations(TestCase):
 
         i = 0
 
-        try:
+        with self.assertRaises(RateLimitExceeded):
             for i in range(4):
                 func()
                 time.sleep(1)
 
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+        self.assertEqual(i, 3)
 
     # def test_multiple_line_limitations(self):
     #     limiter = Limiter()
@@ -201,12 +192,11 @@ class TestCallableFunctionForKeys(TestCase):
 
         i = 0
 
-        try:
-            for i in range(3):
+        with self.assertRaises(RateLimitExceeded):
+            for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+
+        self.assertEqual(i, 3)
 
     def test_more_than_limitation_call_for_key(self):
         limiter = Limiter()
@@ -217,12 +207,10 @@ class TestCallableFunctionForKeys(TestCase):
 
         i = 0
 
-        try:
-            for i in range(3):
+        with self.assertRaises(RateLimitExceeded):
+            for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+        self.assertEqual(i, 3)
 
     def test_more_than_limitation_call_for_exempt(self):
         limiter = Limiter()
@@ -233,12 +221,10 @@ class TestCallableFunctionForKeys(TestCase):
 
         i = 0
 
-        try:
-            for i in range(3):
-                func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+        for i in range(4):
+            func()
+
+        self.assertEqual(i, 3)
 
 
 class TestGlobalKeys(TestCase):
@@ -252,13 +238,11 @@ class TestGlobalKeys(TestCase):
             pass
 
         i = 0
-
-        try:
+        with self.assertRaises(RateLimitExceeded):
             for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+
+        self.assertEqual(i, 3)
 
     def test_global_limitations_key(self):
         limiter = Limiter(
@@ -270,13 +254,11 @@ class TestGlobalKeys(TestCase):
             pass
 
         i = 0
-
-        try:
-            for i in range(3):
+        with self.assertRaises(RateLimitExceeded):
+            for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+
+        self.assertEqual(i, 3)
 
     def test_exempt_key(self):
         limiter = Limiter(
@@ -307,11 +289,6 @@ class TestExemptKey(TestCase):
         for i in range(10):
             func()
 
-        try:
-            func()
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
-
     def test_exempt_key_not_equal(self):
         limiter = Limiter(
             default_key='key'
@@ -322,12 +299,11 @@ class TestExemptKey(TestCase):
             pass
 
         i = 0
-        try:
+        with self.assertRaises(RateLimitExceeded):
             for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
-            self.assertEqual(i, 3)
+
+        self.assertEqual(i, 3)
 
 
 class TestRedis(TestCase):
@@ -347,11 +323,10 @@ class TestRedis(TestCase):
             pass
 
         i = 0
-        try:
-            for i in range(3):
-                func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
+
+        for i in range(3):
+            func()
+
         self.assertEqual(2, i)
 
     def test_redis_for_single_instance_over_rate(self):
@@ -364,11 +339,10 @@ class TestRedis(TestCase):
             pass
 
         i = 0
-        try:
+
+        with self.assertRaises(RateLimitExceeded):
             for i in range(4):
                 func()
-        except Exception as e:
-            self.assertIsInstance(e, RateLimitExceeded)
 
         self.assertEqual(i, 3)
 
