@@ -42,10 +42,10 @@ Function-Limiter
 
 .. class:: center
 
-  |readthedocs|  |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
+|readthedocs|  |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
 
 
-Function-Limiter provides rate limiting features to callable function.
+Function-Limiter provides call rate limitation of callable function.
 
 Installation
 ============
@@ -59,9 +59,11 @@ Quick Start
 ===========
 
 Add the rate limiter to your function as decorator. The following example uses the default
-in memory implementation for storage.
+in memory implementation. ``Limiter()`` create instance of limiter.
+By using ``limiter.limit()`` call rate of callable function become limited.
+``limiter.limit(limitation, key)`` limitation get the limitation can be assigned number per one of these keywords (second, minute, hour, day, month, year).
+Limitation applied on defined key.
 
-The decorators made available as instance methods of the Limiter instance are ``Limiter``.
 
 .. code-block:: python
 
@@ -75,6 +77,7 @@ The decorators made available as instance methods of the Limiter instance are ``
     @limiter.limit('3/second', 'key')
     def function():
         print('hello world!')
+
 
 
 .. code-block:: python
@@ -107,7 +110,7 @@ The limit string can be a single limit or a delimiter separated string
 Custom keying function
 ======================
 
-By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
+You can implement your own function to retrieve the value of rate limit config.
 
 .. code-block:: python
 
@@ -126,7 +129,7 @@ By default rate limits are applied based on the key function that the Limiter in
 Redis storage
 ======================
 
-By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
+Redis storage can be involved to lunch multiple instance of application.
 
 .. code-block:: python
 
@@ -142,12 +145,30 @@ By default rate limits are applied based on the key function that the Limiter in
 Exempt key
 ======================
 
-By default rate limits are applied based on the key function that the Limiter instance was initialized with. You can implement your own function to retrieve the key to rate limit by when decorating individual routes. Take a look at Rate Limit Key Functions for some examples.
+Exempt key can be used to exempt defined keys. If key and exempt key matched it ignores the limitations
 
 .. code-block:: python
 
     limiter = Limiter()
 
     @limiter.limit('3/minute', 'key', exempt='key')
+    def func():
+        pass
+
+Default values
+==============
+
+You can define rate limit default value when the Limiter instance was initialized.
+By defining default rate limit values if there isn't any value for the specific key it applies the default value.
+
+.. code-block:: python
+
+    limiter = Limiter(
+        default_limitations='3/minute',
+        default_key='key',
+        default_exempt='key'
+    )
+
+    @limiter.limit()
     def func():
         pass
