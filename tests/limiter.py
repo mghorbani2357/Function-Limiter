@@ -20,7 +20,7 @@ class TestSimpleFiveRequest(TestCase):
         for i in range(5):
             func()
 
-        self.assertEqual(i, 4)
+        self.assertEqual(4, i)
 
     def test_more_than_limitation_call(self):
         limiter = Limiter()
@@ -35,7 +35,7 @@ class TestSimpleFiveRequest(TestCase):
             for i in range(6):
                 func()
 
-        self.assertEqual(i, 5)
+        self.assertEqual(5, i)
 
     def test_five_call_using_per(self):
         limiter = Limiter()
@@ -49,7 +49,7 @@ class TestSimpleFiveRequest(TestCase):
         for i in range(5):
             func()
 
-        self.assertEqual(i, 4)
+        self.assertEqual(4, i)
 
 
 class TestMultipleLimitations(TestCase):
@@ -67,7 +67,7 @@ class TestMultipleLimitations(TestCase):
             func()
             time.sleep(1)
 
-        self.assertEqual(i, 2)
+        self.assertEqual(2, i)
 
     def test_single_line_limitations_more_than_first_limitation(self):
         limiter = Limiter()
@@ -82,7 +82,7 @@ class TestMultipleLimitations(TestCase):
             for i in range(3):
                 func()
 
-        self.assertEqual(i, 1)
+        self.assertEqual(1, i)
 
     def test_single_line_limitations_more_than_second_limitation(self):
         limiter = Limiter()
@@ -98,7 +98,7 @@ class TestMultipleLimitations(TestCase):
                 func()
                 time.sleep(1)
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
     # def test_multiple_line_limitations(self):
     #     limiter = Limiter()
@@ -181,7 +181,7 @@ class TestCallableFunctionForKeys(TestCase):
         for i in range(3):
             func()
 
-        self.assertEqual(i, 2)
+        self.assertEqual(2, i)
 
     def test_more_than_limitation_call_for_limitations(self):
         limiter = Limiter()
@@ -196,7 +196,7 @@ class TestCallableFunctionForKeys(TestCase):
             for i in range(4):
                 func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
     def test_more_than_limitation_call_for_key(self):
         limiter = Limiter()
@@ -210,7 +210,8 @@ class TestCallableFunctionForKeys(TestCase):
         with self.assertRaises(RateLimitExceeded):
             for i in range(4):
                 func()
-        self.assertEqual(i, 3)
+
+        self.assertEqual(3, i)
 
     def test_more_than_limitation_call_for_exempt(self):
         limiter = Limiter()
@@ -224,11 +225,11 @@ class TestCallableFunctionForKeys(TestCase):
         for i in range(4):
             func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
 
-class TestGlobalKeys(TestCase):
-    def test_global_limitations(self):
+class TestDefaultKeys(TestCase):
+    def test_default_limitations(self):
         limiter = Limiter(
             default_limitations='3/minute'
         )
@@ -242,9 +243,9 @@ class TestGlobalKeys(TestCase):
             for i in range(4):
                 func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
-    def test_global_limitations_key(self):
+    def test_default_limitations_key(self):
         limiter = Limiter(
             default_key='key'
         )
@@ -258,9 +259,9 @@ class TestGlobalKeys(TestCase):
             for i in range(4):
                 func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
-    def test_exempt_key(self):
+    def test_default_exempt_key(self):
         limiter = Limiter(
             default_exempt='key'
         )
@@ -273,7 +274,7 @@ class TestGlobalKeys(TestCase):
         for i in range(10):
             func()
 
-        self.assertEqual(i, 9)
+        self.assertEqual(9, i)
 
 
 class TestExemptKey(TestCase):
@@ -286,8 +287,11 @@ class TestExemptKey(TestCase):
         def func():
             pass
 
+        i = 0
         for i in range(10):
             func()
+
+        self.assertEqual(9, i)
 
     def test_exempt_key_not_equal(self):
         limiter = Limiter(
@@ -303,7 +307,7 @@ class TestExemptKey(TestCase):
             for i in range(4):
                 func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
 
 class TestRedis(TestCase):
@@ -344,7 +348,7 @@ class TestRedis(TestCase):
             for i in range(4):
                 func()
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
     def test_redis_for_multiple_instance(self):
         limiter = Limiter(
@@ -370,7 +374,7 @@ class TestRedis(TestCase):
         except Exception as e:
             self.assertIsInstance(e, RateLimitExceeded)
 
-        self.assertEqual(i, 3)
+        self.assertEqual(3, i)
 
     def test_redis_custom_database_name(self):
         limiter = Limiter(
@@ -388,7 +392,7 @@ class TestRedis(TestCase):
                 func()
         except Exception as e:
             self.assertIsInstance(e, RateLimitExceeded)
-        self.assertEqual(i, 2)
+        self.assertEqual(2, i)
 
 
 class TestWrongInput(TestCase):
@@ -401,13 +405,10 @@ class TestWrongInput(TestCase):
 
         i = 0
 
-        try:
-            for i in range(10):
-                func()
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
+        for i in range(10):
+            func()
 
-        self.assertEqual(i, 9)
+        self.assertEqual(9, i)
 
     def test_wrong_type_limitations_format(self):
         limiter = Limiter()
@@ -418,13 +419,10 @@ class TestWrongInput(TestCase):
 
         i = 0
 
-        try:
-            for i in range(10):
-                func()
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
+        for i in range(10):
+            func()
 
-        self.assertEqual(i, 9)
+        self.assertEqual(9, i)
 
 
 class TestGarbageCollector(TestCase):
@@ -437,14 +435,11 @@ class TestGarbageCollector(TestCase):
 
         i = 0
 
-        try:
-            for i in range(3):
-                func()
-                time.sleep(1)
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
+        for i in range(4):
+            func()
+            time.sleep(1)
 
-        self.assertEqual(i, 2)
+        self.assertEqual(3, i)
 
     def test_garbage_collector_none_garbage(self):
         limiter = Limiter()
@@ -455,10 +450,8 @@ class TestGarbageCollector(TestCase):
 
         i = 0
 
-        try:
-            for i in range(3):
+        with self.assertRaises(RateLimitExceeded):
+            for i in range(4):
                 func()
-        except Exception as e:
-            self.assertNotIsInstance(e, RateLimitExceeded)
 
-        self.assertEqual(i, 2)
+        self.assertEqual(3, i)
