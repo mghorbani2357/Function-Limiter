@@ -42,7 +42,7 @@ Function-Limiter
 
 .. class:: center
 
-|readthedocs|  |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
+ |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
 
 
 Function-Limiter provides call rate limitation of callable function.
