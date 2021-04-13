@@ -25,6 +25,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8.5
+          
+      - name: Install Python requirements
+        run: pip install -r requirements.txt
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
 
       - name: Unit Tests
         run: python3 -m unittest tests/limiter.py
