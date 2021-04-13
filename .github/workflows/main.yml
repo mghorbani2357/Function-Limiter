@@ -15,4 +15,4 @@ jobs:
           python-version: 3.8.5
 
       - name: Unit Tests
-        run: python3 -m unittest tests/limiter.oy
+        run: python3 -m unittest tests/limiter.py
