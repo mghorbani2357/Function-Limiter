@@ -1,5 +1,6 @@
-.. |license| image:: https://img.shields.io/pypi/l/Function-Limiter.svg?style=flat
-    :target: https://pypi.python.org/pypi/Function-Limiter
+.. |license| image:: https://img.shields.io/github/license/mghorbani2357/function-limiter
+    :target: https://raw.githubusercontent.com/mghorbani2357/Function-Limiter/master/LICENSE
+    :alt: GitHub Licence
     
 .. |build| image:: https://travis-ci.com/mghorbani2357/Function-Limiter.svg?branch=master
     :target: https://travis-ci.com/mghorbani2357/Function-Limiter
@@ -36,13 +37,22 @@
     :alt: Documentation Status
 
 
+.. |lastcommit| image:: https://img.shields.io/github/last-commit/mghorbani2357/function-limiter 
+    :alt: GitHub last commit
+    
+.. |lastrelease| image:: https://img.shields.io/github/release-date/mghorbani2357/function-limiter   
+    :alt: GitHub Release Date
+
+.. |workflow| image:: https://img.shields.io/github/workflow/status/mghorbani2357/function-limiter/main?logo=github   
+    :alt: GitHub Workflow Status
+
 *****************
 Function-Limiter
 *****************
 
 .. class:: center
 
- |license| |build| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel|
+ |license| |build| |workflow| |quality| |coverage| |downloadrate| |downloads| |pypiversion| |format| |wheel| |lastcommit| |lastrelease|
 
 
 Function-Limiter provides call rate limitation of callable function.
