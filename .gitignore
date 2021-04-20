@@ -130,3 +130,4 @@ dmypy.json
 main.py
 
 .coverage
+coverage.xml
