@@ -26,8 +26,12 @@ jobs:
         with:
           python-version: 3.8.5
           
-      - name: Install Python requirements
-        run: pip install -r requirements.txt
+      - name: Install Package Requirements
+        run: pip install -r requirements/main.txt
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+
+      - name: Install Build Requirements
+        run: pip install -r requirements/build.txt
         if: steps.cache-virtualenv.outputs.cache-hit != 'true'
 
       - name: Unit Tests
