@@ -10,7 +10,7 @@ import versioneer
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 
-REQUIREMENTS = filter(None, open('requirements/requirements.txt').read().splitlines())
+REQUIREMENTS = filter(None, open('requirements/main.txt').read().splitlines())
 
 setup(
     name='Function-Limiter',
