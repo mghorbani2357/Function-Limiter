@@ -69,7 +69,7 @@ class Limiter(object):
             limitations += ';'  # Add `;` to end of the string
 
         # Check limitation must fallow `count per period;`
-        regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(?:second|minute|hour|week|month|year)(?:;|,))'
+        regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(?:second|minute|hour|day|week|month|year)(?:;|,))'
 
         regex = re.compile(regex_string)
 
