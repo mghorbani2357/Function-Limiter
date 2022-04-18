@@ -4,8 +4,10 @@ __author__ = "Mohsen Ghorbani"
 __email__ = "m.ghorbani2357@gmail.com"
 __copyright__ = "Copyright 2021, Mohsen Ghorbani"
 
-from setuptools import setup, find_packages
 import os
+
+from setuptools import setup, find_packages
+
 import versioneer
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
@@ -24,7 +26,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     install_requires=list(REQUIREMENTS),
-    long_description=open('README.rst').read() + open('HISTORY.rst').read(),
+    long_description=open('README.rst').read(),
     long_description_content_type='text/x-rst',
     description='Rate limiting for callable functions',
 )
