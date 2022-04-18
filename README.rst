@@ -185,7 +185,7 @@ By defining default rate limit values if there isn't any value for the specific 
 
 
 Limitation reset
-==============
+================
 
 Limitation can be reset for specific key.
 
