@@ -3,6 +3,15 @@
 Changelog
 =========
 
+v0.1.2
+-------
+Release Date: 2022-04-18
+    * Limitation reset implemented
+    * Bug Fixed:
+        * Day limitation bug fixed
+
+    * Notice: From next version, limiter must directly import package
+
 v0.1.1
 -------
 Release Date: 2021-02-21
