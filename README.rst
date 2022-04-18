@@ -182,3 +182,26 @@ By defining default rate limit values if there isn't any value for the specific 
     @limiter.limit()
     def func():
         pass
+
+
+Limitation reset
+==============
+
+Limitation can be reset for specific key.
+
+.. code-block:: python
+
+    limiter = Limiter()
+
+    @limiter.limit('3 per second', 'key')
+    def func():
+        pass
+
+    for _ in range(3):
+       func()
+
+    limiter.reset('key')
+
+    for _ in range(3):
+       func()
+
