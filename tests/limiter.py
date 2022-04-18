@@ -1,10 +1,12 @@
+import time
+from contextlib import suppress
+from multiprocessing import Process
 from unittest import TestCase
+
 import redis
 
-from function_limiter.limiter import Limiter
-from function_limiter.limiter import RateLimitExceeded
-import time
-from multiprocessing import Process
+from function_limiter import Limiter
+from function_limiter import RateLimitExceeded
 
 
 class TestSimpleFiveRequest(TestCase):
@@ -455,3 +457,50 @@ class TestGarbageCollector(TestCase):
                 func()
 
         self.assertEqual(3, i)
+
+
+class TestLimitationRest(TestCase):
+    def test_reset(self):
+        limiter = Limiter()
+
+        @limiter.limit('4/minute', 'key')
+        def func():
+            pass
+
+        with suppress(RateLimitExceeded):
+            for _ in range(5):
+                func()
+
+        limiter.reset('key')
+
+        for i in range(4):
+            func()
+
+        self.assertEqual(3, i)
+
+    def test_redis_rest(self):
+        limiter = Limiter(
+            storage_uri='redis://127.0.0.1:6379/'
+        )
+
+        @limiter.limit('3/minute', 'key')
+        def func():
+            pass
+
+        with suppress(RateLimitExceeded):
+            for _ in range(5):
+                func()
+
+        limiter.reset('key')
+
+        for i in range(3):
+            func()
+
+        self.assertEqual(2, i)
+
+    def tearDown(self):
+        with suppress(redis.exceptions.ConnectionError):
+            storage = redis.from_url(url='redis://127.0.0.1:6379/', db=0)
+
+            storage.delete('function-limiter')
+            storage.delete('custom_database_name')
