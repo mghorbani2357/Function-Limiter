@@ -166,7 +166,7 @@ Exempt key can be used to exempt defined keys. If key and exempt key matched it 
         pass
 
 Default values
-==============
+===============
 
 You can define rate limit default value when the Limiter instance was initialized.
 By defining default rate limit values if there isn't any value for the specific key it applies the default value.
@@ -185,7 +185,7 @@ By defining default rate limit values if there isn't any value for the specific 
 
 
 Limitation reset
-================
+=================
 
 Limitation can be reset for specific key.
 
