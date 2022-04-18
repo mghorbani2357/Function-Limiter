@@ -3,7 +3,7 @@
 Changelog
 =========
 
-v0.1.2
+v0.1.3
 -------
 Release Date: 2022-04-18
     * Limitation reset implemented
