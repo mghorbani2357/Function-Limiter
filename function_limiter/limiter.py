@@ -1,10 +1,12 @@
 """Function-Limiter Extension for limiting callable functions."""
 
-from functools import wraps
-import time
-import re
-import redis
 import json
+import re
+import time
+from contextlib import suppress
+from functools import wraps
+
+import redis
 
 
 class RateLimitExceeded(Exception):
@@ -45,7 +47,7 @@ class Limiter(object):
             if not self.storage.exists(self.__database_name):
                 self.logs = self.storage.set(self.__database_name, '{}')
 
-            self.logs = json.loads(self.storage.get(self.__database_name).decode().replace('\'', '"'))
+            self.logs = json.loads(self.storage.get(self.__database_name).decode())
 
         else:
             self.storage = None
@@ -150,11 +152,12 @@ class Limiter(object):
             function: Limited function.
 
         """
+
         def decorator(function):
             @wraps(function)
             def wrapper(*args, **kwargs):
                 if self.storage:
-                    self.logs = json.loads(self.storage.get(self.__database_name).decode().replace('\'', '"'))
+                    self.logs = json.loads(self.storage.get(self.__database_name).decode())
 
                 _key = key() if callable(key) else key
                 _limitations = limitations() if callable(limitations) else limitations
@@ -182,7 +185,7 @@ class Limiter(object):
                     self.logs[_key].append(time.time())
 
                     if self.storage:
-                        self.storage.set(self.__database_name, str(self.logs))
+                        self.storage.set(self.__database_name, json.dumps(self.logs))
 
                 return function(*args, **kwargs)
 
@@ -192,3 +195,20 @@ class Limiter(object):
             return wrapper
 
         return decorator
+
+    def reset(self, key):
+        """
+            Args:
+                key (str|function|NoneType): Key which specifies the limitation.
+        """
+
+        _key = key() if callable(key) else key
+
+        if self.storage:
+            self.logs = json.loads(self.storage.get(self.__database_name).decode())
+
+        with suppress(KeyError):
+            del self.logs[_key]
+
+        if self.storage:
+            self.storage.set(self.__database_name, json.dumps(self.logs))
