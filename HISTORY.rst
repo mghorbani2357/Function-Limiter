@@ -3,6 +3,12 @@
 Changelog
 =========
 
+v0.1.4
+-------
+Release Date: 2022-04-18
+    * Added support for Redis 4.3.0 and later.
+    * Workflow updated.
+
 v0.1.3
 -------
 Release Date: 2022-04-18
