@@ -205,3 +205,24 @@ Limitation can be reset for specific key.
     for _ in range(3):
        func()
 
+
+Asynchronous function limit
+===========================
+
+Limitation can be reset for specific key.
+
+.. code-block:: python
+
+    limiter = Limiter()
+
+    @limiter.limit('3 per second', 'key')
+    async def func():
+        pass
+
+    for _ in range(3):
+       func()
+
+    limiter.reset('key')
+
+    for _ in range(3):
+       func()
