@@ -3,6 +3,12 @@
 Changelog
 =========
 
+v0.2.0
+-------
+Release Date: 2022-04-18
+    * Redis storage connection updated to use RedisClient.
+    * Asynchronous function limitation added.
+
 v0.1.4
 -------
 Release Date: 2022-04-18
