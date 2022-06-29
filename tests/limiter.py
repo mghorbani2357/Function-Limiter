@@ -321,7 +321,7 @@ class TestRedis(TestCase):
 
     def test_redis_for_single_instance(self):
         limiter = Limiter(
-            storage_uri='redis://127.0.0.1:6379/'
+            redis_storage=redis.Redis()
         )
 
         @limiter.limit('3/minute', 'key')
@@ -337,7 +337,7 @@ class TestRedis(TestCase):
 
     def test_redis_for_single_instance_over_rate(self):
         limiter = Limiter(
-            storage_uri='redis://127.0.0.1:6379/'
+            redis_storage=redis.Redis()
         )
 
         @limiter.limit('3/minute', 'over-key')
@@ -354,7 +354,7 @@ class TestRedis(TestCase):
 
     def test_redis_for_multiple_instance(self):
         limiter = Limiter(
-            storage_uri='redis://127.0.0.1:6379/'
+            redis_storage=redis.Redis()
         )
 
         @limiter.limit('3/minute', 'multiple-instance-key')
@@ -381,7 +381,7 @@ class TestRedis(TestCase):
     def test_redis_custom_database_name(self):
         limiter = Limiter(
             database_name='custom_database_name',
-            storage_uri='redis://127.0.0.1:6379/'
+            redis_storage=redis.Redis()
         )
 
         @limiter.limit('3/minute', 'key-k')
@@ -480,7 +480,7 @@ class TestLimitationRest(TestCase):
 
     def test_redis_rest(self):
         limiter = Limiter(
-            storage_uri='redis://127.0.0.1:6379/'
+            redis_storage=redis.Redis()
         )
 
         @limiter.limit('3/minute', 'key')
@@ -500,7 +500,7 @@ class TestLimitationRest(TestCase):
 
     def tearDown(self):
         with suppress(redis.exceptions.ConnectionError):
-            storage = redis.from_url(url='redis://127.0.0.1:6379/', db=0)
+            storage = redis.Redis()
 
             storage.delete('function-limiter')
             storage.delete('custom_database_name')

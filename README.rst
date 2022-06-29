@@ -95,10 +95,10 @@ Limitation applied on defined key.
     from function_limiter.limiter import Limiter
     from function_limiter.limiter import RateLimitExceeded
     import time
+    import redis
 
-    storage_uri = 'redis://ip:port/'
     limiter = Limiter(
-            storage_uri=storage_uri
+            storage_uri=redis.Redis()
         )
 
 
@@ -144,7 +144,7 @@ Redis storage can be involved to lunch multiple instance of application.
 .. code-block:: python
 
     limiter = Limiter(
-        storage_uri='redis://ip:port/'
+        storage_uri=redis.Redis()
     )
 
     @limiter.limit('3/minute', 'key')

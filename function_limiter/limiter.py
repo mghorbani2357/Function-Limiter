@@ -28,11 +28,11 @@ class Limiter(object):
     __database_name = 'function-limiter'
     __limiter_keys = list()
 
-    def __init__(self, storage_uri=None, default_limitations=None, default_key=None, default_exempt=None,
+    def __init__(self, redis_storage=None, default_limitations=None, default_key=None, default_exempt=None,
                  database_name=None):
         """
         Args:
-            storage_uri (str): URI of redis.
+            redis_storage (redis.Redis): Redis storage.
             default_limitations (str|function|None): Global limitations
             default_key (str|function|None): Global limitations key
             default_exempt (str|function|None): Exempt key used to decide if the rate limit should skipped.
@@ -41,16 +41,16 @@ class Limiter(object):
         if database_name is not None:
             self.__database_name = database_name
 
-        if storage_uri:
-            self.storage = redis.from_url(url=storage_uri, db=0)
+        if redis_storage:
+            self.redis_storage = redis_storage
 
-            if not self.storage.exists(self.__database_name):
-                self.logs = self.storage.set(self.__database_name, '{}')
+            if not self.redis_storage.exists(self.__database_name):
+                self.logs = self.redis_storage.set(self.__database_name, '{}')
 
-            self.logs = json.loads(self.storage.get(self.__database_name).decode())
+            self.logs = json.loads(self.redis_storage.get(self.__database_name).decode())
 
         else:
-            self.storage = None
+            self.redis_storage = None
             self.logs = dict()
 
         self.default_limitations = default_limitations
