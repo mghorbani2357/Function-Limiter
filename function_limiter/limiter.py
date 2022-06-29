@@ -1,5 +1,5 @@
 """Function-Limiter Extension for limiting callable functions."""
-
+import asyncio
 import json
 import re
 import time
@@ -154,47 +154,55 @@ class Limiter(object):
         """
 
         def decorator(function):
-            @wraps(function)
-            def wrapper(*args, **kwargs):
-                if self.storage:
-                    self.logs = json.loads(self.storage.get(self.__database_name).decode())
-
-                _key = key() if callable(key) else key
-                _limitations = limitations() if callable(limitations) else limitations
-                _exempt = exempt() if callable(exempt) else exempt
-
-                if _limitations is None and self.default_limitations:
-                    _limitations = self.default_limitations
-
-                if _key is None and self.default_key:
-                    _key = self.default_key
-
-                if exempt is None and self.default_exempt:
-                    _exempt = self.default_exempt
-
-                if not (_key is None or _key == _exempt):
-                    # self.__limiter_keys.append(_key)
-                    # if self.__limiter_keys.count(_key) <= 1:
-
-                    if _key not in self.logs:
-                        self.logs[_key] = list()
-
-                    if not self.__evaluate_limitations(_limitations, _key):
-                        raise RateLimitExceeded
-
-                    self.logs[_key].append(time.time())
-
-                    if self.storage:
-                        self.storage.set(self.__database_name, json.dumps(self.logs))
-
-                return function(*args, **kwargs)
-
-            # if self.__limiter_keys.__len__() > 0:
-            #     self.__limiter_keys.pop(0)
+            if asyncio.iscoroutinefunction(function):
+                @wraps(function)
+                async def wrapper(*args, **kwargs):
+                    self.__limitation_check(limitations, key, exempt)
+                    return await function(*args, **kwargs)
+            else:
+                @wraps(function)
+                def wrapper(*args, **kwargs):
+                    self.__limitation_check(limitations, key, exempt)
+                    return function(*args, **kwargs)
 
             return wrapper
 
         return decorator
+
+    def __limitation_check(self, limitations, key, exempt):
+        if self.redis_storage:
+            self.logs = json.loads(self.redis_storage.get(self.__database_name).decode())
+
+        _key = key() if callable(key) else key
+        _limitations = limitations() if callable(limitations) else limitations
+        _exempt = exempt() if callable(exempt) else exempt
+
+        if _limitations is None and self.default_limitations:
+            _limitations = self.default_limitations
+
+        if _key is None and self.default_key:
+            _key = self.default_key
+
+        if exempt is None and self.default_exempt:
+            _exempt = self.default_exempt
+
+        if not (_key is None or _key == _exempt):
+            # self.__limiter_keys.append(_key)
+            # if self.__limiter_keys.count(_key) <= 1:
+
+            if _key not in self.logs:
+                self.logs[_key] = list()
+
+            if not self.__evaluate_limitations(_limitations, _key):
+                raise RateLimitExceeded
+
+            self.logs[_key].append(time.time())
+
+            if self.redis_storage:
+                self.redis_storage.set(self.__database_name, json.dumps(self.logs))
+
+            # if self.__limiter_keys.__len__() > 0:
+            #     self.__limiter_keys.pop(0)
 
     def reset(self, key):
         """
@@ -204,11 +212,11 @@ class Limiter(object):
 
         _key = key() if callable(key) else key
 
-        if self.storage:
-            self.logs = json.loads(self.storage.get(self.__database_name).decode())
+        if self.redis_storage:
+            self.logs = json.loads(self.redis_storage.get(self.__database_name).decode())
 
         with suppress(KeyError):
             del self.logs[_key]
 
-        if self.storage:
-            self.storage.set(self.__database_name, json.dumps(self.logs))
+        if self.redis_storage:
+            self.redis_storage.set(self.__database_name, json.dumps(self.logs))

@@ -1,7 +1,8 @@
+import asyncio
 import time
 from contextlib import suppress
 from multiprocessing import Process
-from unittest import TestCase
+from unittest import TestCase, IsolatedAsyncioTestCase
 
 import redis
 
@@ -504,3 +505,19 @@ class TestLimitationRest(TestCase):
 
             storage.delete('function-limiter')
             storage.delete('custom_database_name')
+
+
+class TestAsyncLimiter(IsolatedAsyncioTestCase):
+    async def test_async_limiter(self):
+        limiter = Limiter()
+
+        @limiter.limit('3/minute', 'key')
+        async def func():
+            await asyncio.sleep(0.5)
+
+        i = 0
+        with suppress(RateLimitExceeded):
+            for i in range(10):
+                await func()
+
+        self.assertEqual(3, i)
