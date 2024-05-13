@@ -1,9 +1,11 @@
-name: main
+name: Publish
 
-on: [release]
+on:
+  release:
+    branches: [ "main" ]
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
     
     services:
