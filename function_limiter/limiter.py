@@ -71,7 +71,7 @@ class Limiter(object):
             limitations += ';'  # Add `;` to end of the string
 
         # Check limitation must fallow `count per period;`
-        regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(?:second|minute|hour|day|week|month|year)(?:;|,))'
+        regex_string = r'((?:\d+(?:.\d+)?)(?:\/| per )(\d*)(?:second|minute|hour|day|week|month|year)(?:;|,))'
 
         regex = re.compile(regex_string)
 
@@ -114,23 +114,30 @@ class Limiter(object):
             bool: True if it permitted, False if otherwise
 
         """
-        if not self.__validate_limitations(limitations):
-            return True
 
         limitations = limitations.replace('per', '/')
         limitations = limitations.replace(' ', '')
         limitations = limitations.replace(',', ';')
 
-        self.__garbage_collector(limitations, key)
+        if not self.__validate_limitations(limitations):
+            return True
+
+        # self.__garbage_collector(limitations, key)
 
         for limitation in limitations.split(';'):
             limit_count, limit_time = limitation.split('/')
-            limit_count = float(limit_count)
-            period = time_periods[limit_time]
+            limit_count = int(limit_count)
+
+            for period in time_periods.keys():
+                if period in limit_time:
+                    if limit_time.removesuffix(period) == '':
+                        oscillation = time_periods[limit_time]
+                    else:
+                        oscillation = int(limit_time.removesuffix(period)) * time_periods[period]
             lap = 0
 
             for tick in self.logs[key]:
-                if time.time() - tick < period:
+                if time.time() - tick < oscillation:
                     lap += 1
 
             if limit_count <= lap:
