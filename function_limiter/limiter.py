@@ -75,10 +75,7 @@ class Limiter(object):
 
         regex = re.compile(regex_string)
 
-        if regex.match(limitations):  # If matches return true to continue the rule
-            return True
-        else:  # otherwise return False to allow to execute the function
-            return False
+        return bool(regex.match(limitations))
 
     def __garbage_collector(self, limitations, key):
         """
